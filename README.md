@@ -1,4 +1,4 @@
-# Discord Bot - Channel Lock/Unlock with Role Permission Management
+# Discord Bot - SysBots Lock/Unlock with Role Permission Management
 
 This Discord bot allows server administrators to lock and unlock channels, updating role permissions to manage send message capabilities. The bot uses Discord.js and reads environment variables from a `.env` file.
 
