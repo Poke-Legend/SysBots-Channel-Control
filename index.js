@@ -3,7 +3,7 @@ const fs = require('fs');
 const { Client, Intents, MessageEmbed } = require('discord.js');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
-const prefix = '!'; // Your bot's command prefix
+const prefix = '$'; // Your bot's command prefix
 const allowedRoleIds = [
     process.env.ALLOWED_ROLE_ID, 
     process.env.ALLOWED_ROLE_ID2,
@@ -98,9 +98,9 @@ client.on('messageCreate', async message => {
         return;
     }
 
-    if (command === 'lock' || command === 'unlock') {
+    if (command === 'sysoff' || command === 'syson') {
         const lastExecuted = rememberData.cooldowns[channel.id];
-        const isLockCommand = command === 'lock';
+        const isLockCommand = command === 'sysoff';
         const alreadyLocked = channel.name.startsWith(lockEmoji);
         const alreadyUnlocked = !alreadyLocked;
 
@@ -136,7 +136,7 @@ client.on('messageCreate', async message => {
             await channel.permissionOverwrites.edit(roleToManageId, { SEND_MESSAGES: false });
 
             // Update remember.json file
-            rememberData[channel.id] = 'locked';
+            rememberData[channel.id] = 'sysoff';
             rememberData.cooldowns[channel.id] = Date.now();
             writeRememberFile(rememberData);
 
@@ -144,7 +144,8 @@ client.on('messageCreate', async message => {
             const lockEmbed = new MessageEmbed()
                 .setColor('#ff0000')
                 .setTitle('SysBots Offline')
-                .setDescription(`${message.author} has locked this channel.`);
+                .setDescription(`${message.author} has locked this channel.`)
+                .setImage('https://i.imgur.com/csmSEVh.png'); // Add your lock image URL here
 
             await message.channel.send({ embeds: [lockEmbed] });
 
@@ -156,7 +157,7 @@ client.on('messageCreate', async message => {
             await channel.permissionOverwrites.edit(roleToManageId, { SEND_MESSAGES: null });
 
             // Update remember.json file
-            rememberData[channel.id] = 'unlocked';
+            rememberData[channel.id] = 'syson';
             rememberData.cooldowns[channel.id] = Date.now();
             writeRememberFile(rememberData);
 
@@ -164,7 +165,8 @@ client.on('messageCreate', async message => {
             const unlockEmbed = new MessageEmbed()
                 .setColor('#00ff00')
                 .setTitle('SysBots Online')
-                .setDescription(`${message.author} has unlocked this channel.`);
+                .setDescription(`${message.author} has unlocked this channel.`)
+                .setImage('https://i.imgur.com/m1RKJak.png'); // Add your unlock image URL here
 
             await message.channel.send({ embeds: [unlockEmbed] });
         }
